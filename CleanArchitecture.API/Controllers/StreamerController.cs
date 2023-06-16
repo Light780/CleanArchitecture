@@ -2,13 +2,13 @@
 using CleanArchitecture.Application.Features.Streamers.Commands.DeleteStreamer;
 using CleanArchitecture.Application.Features.Streamers.Commands.UpdateStreamer;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace CleanArchitecture.API.Controllers
 {
     [Route("api/v1/[controller]")]
+    [Authorize(Roles = "Administrator")]
     [ApiController]
     public class StreamerController : ControllerBase
     {
