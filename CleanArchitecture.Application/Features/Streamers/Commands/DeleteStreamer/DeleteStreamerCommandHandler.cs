@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.Exceptions;
-using CleanArchitecture.Application.Features.Streamers.Commands.UpdateStreamer;
 using CleanArchitecture.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.Features.Streamers.Commands.DeleteStreamer
 {
