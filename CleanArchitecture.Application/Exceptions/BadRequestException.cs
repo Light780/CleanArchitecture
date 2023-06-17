@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.Exceptions
 {
-    public class NotFoundException : ApplicationException
+    public class BadRequestException : ApplicationException
     {
-        public NotFoundException(string name, object key): base($"Entity \"{name}\" ({key}) was not found")
+        public BadRequestException(string? message) : base(message)
         {
-            
         }
     }
 }
