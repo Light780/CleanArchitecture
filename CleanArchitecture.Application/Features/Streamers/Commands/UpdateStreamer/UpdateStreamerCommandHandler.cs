@@ -11,20 +11,20 @@ namespace CleanArchitecture.Application.Features.Streamers.Commands.UpdateStream
 {
     public class UpdateStreamerCommandHandler : IRequestHandler<UpdateStreamerCommand, int>
     {
-        private readonly IStreamerRepository _streamerRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<UpdateStreamerCommandHandler> _logger;
 
-        public UpdateStreamerCommandHandler(IStreamerRepository streamerRepository, IMapper mapper, ILogger<UpdateStreamerCommandHandler> logger)
+        public UpdateStreamerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UpdateStreamerCommandHandler> logger)
         {
-            _streamerRepository = streamerRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<int> Handle(UpdateStreamerCommand request, CancellationToken cancellationToken)
         {
-            var streamerToUpdate = await _streamerRepository.FindAsync(request.Id);
+            var streamerToUpdate = await _unitOfWork.StreamerRepository.FindAsync(request.Id);
             if (streamerToUpdate is null)
             {
                 _logger.LogError($"Streamer with id: {request.Id} was not found");
@@ -33,7 +33,15 @@ namespace CleanArchitecture.Application.Features.Streamers.Commands.UpdateStream
 
             _mapper.Map(request, streamerToUpdate, typeof(UpdateStreamerCommand), typeof(Streamer));
 
-            await _streamerRepository.UpdateAsync(streamerToUpdate);
+            _unitOfWork.StreamerRepository.UpdateEntity(streamerToUpdate);
+
+            var result = await _unitOfWork.Complete();
+
+            if (result <= 0)
+            {
+                _logger.LogError("Stremer could not be updated");
+                throw new Exception("Stremer could not be updated");
+            }
 
             _logger.LogInformation($"Stremer \"{streamerToUpdate.Id}\" was updated sucessfully");
 
